@@ -1,0 +1,72 @@
+<a href='/home'>home</a> | <a href='/direct_messages/received'>direct messages (<%= @dm_count%>)</a> | <a href='/logout'>logout</a>
+<% if @user != @myself and not @myself.follows.include? @user then %> | <a href='/follow/<%= @user.email%>'>follow this meeper!</a><% end %>
+<div id='error'><%= flash[:error]%></div>
+<table class="columns" cellspacing="0">
+	<tr>
+		<td id="content" class="round-left column">
+			<div class='wrapper'>
+				<% if @user == @myself then %>
+				<form method="post" action="/meep">	
+					<table class='meep-box'>
+						<tr><td><h3>What are you doing?</td></tr>
+						<tr><td><textarea cols="40" rows="2" name="meep"></textarea></td></tr>
+						<tr><td id='update-box'><input id='update-button' value="update" type="submit"></td></tr>												
+					</table>
+				</form>
+				<% else %>
+					<span><img width='48' height='48' src='<%= @user.photo_url %>'/><strong><%= @user.nickname%></strong></span>					
+				<% end %>
+				<div class="tab">
+					<ol class='statuses'>
+						<% @user.displayed_meeps.each do |meep| %>
+						<li>
+							<span class="status-body">
+								<span class="thumb vcard author"><img width='48' height='48' src='<%= meep.user.photo_url %>'/></span>							
+								<strong><a class="screen-name" href="/<%= meep.user.email %>"><%= meep.user.nickname%></a></strong>
+								<span class="entry-content"><%= meep.text %></span><br/>
+								<span class="meta entry-meta"><%= time_ago_in_words(meep.created_at.to_time)%></span>
+							</span>
+						</li>
+						<% end unless @user.displayed_meeps.nil? %>	
+					</ol>
+				</div>
+			</div>
+		</td>
+		<td id='side_base' class='column round-right'>
+			<div id="side">
+				<div class="section" id="profile">
+					<div class="user_icon">
+						<a alt='Avatar from Gravatar, click to signup for one, or change your current avatar' href="http://en.gravatar.com/site/login"><img width="48" height="48" src="<%= @myself.photo_url%>" class="side_thumb photo fn"/></a>
+						<p id="me_name">
+							<%= @myself.nickname%>
+						</p>
+						<span id='me_email'><%= @myself.email%></span>
+					</div>
+
+					<table cellspacing="0" class="stats">
+						<tbody><tr>
+							<td>
+								<a rel="me" id="following_count_link" href="/follows">
+									<span class="stats_count numeric" id="following_count"><%= @myself.follows.size%></span>
+									<br/>
+									<span class="label">Following</span>
+								</a>
+							</td>
+							<td>
+								<a id="follower_count_link" href="/followers">
+									<span class="stats_count numeric" id="follower_count"><%= @myself.followers.size%></span>
+									<br/>
+									<span class="label">Followers</span>
+								</a>
+							</td><td>
+								<a href="/<%= @myself.email %>"><span class="stats_count numeric" id="update_count"><%= @myself.meeps.size%></span>
+									<br/>
+									<span class="label">Meeps</span></a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</td>
+		</tr>
+	</table>
