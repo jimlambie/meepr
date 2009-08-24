@@ -4,7 +4,7 @@ require 'dm-timestamps'
 require 'dm-aggregates'
 require 'open-uri'
 
-DataMapper.setup(:default, ENV['DATABASE_URL'] || 'mysql://localhost/meep')
+DataMapper.setup(:default, ENV['DATABASE_URL'] || 'mysql://root:root@localhost/meep')
 
 class User
   include DataMapper::Resource
@@ -97,7 +97,7 @@ class Meep
   
   def starts_with?(prefix)
     prefix = prefix.to_s
-    self.text[0..prefix.length] == prefix
+    self.text[0, prefix.length] == prefix
   end
     
 end
