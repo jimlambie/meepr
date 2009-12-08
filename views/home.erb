@@ -1,5 +1,6 @@
 <a href='/home'>home</a> | <a href='/direct_messages/received'>direct messages (<%= @dm_count%>)</a> | <a href='/logout'>logout</a>
 <% if @user != @myself and not @myself.follows.include? @user then %> | <a href='/follow/<%= @user.email%>'>follow this meeper!</a><% end %>
+<% if @user == @myself and not @myself.flickr_enabled? then %> | <a href='/enable_flickr/<%= @user.email%>'>add flickr feed to display</a><% end %>
 <div id='error'><%= flash[:error]%></div>
 <table class="columns" cellspacing="0">
 	<tr>
