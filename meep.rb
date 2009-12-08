@@ -26,6 +26,10 @@ get '/logout' do
   redirect '/'
 end
 
+get '/guess_what' do
+  erb :guess
+end
+
 post '/login' do
   openid_user = get_user(params[:token])
   user = User.find(openid_user[:identifier])
@@ -37,6 +41,12 @@ end
 post '/meep' do
   user = User.get(session[:user_id])
   Meep.create(:text => params[:meep], :user => user)
+  redirect "/#{user.email}"
+end
+
+get '/enable_flickr/:email' do
+  user = User.get(session[:user_id])
+  user.update_attributes({:flickr_enabled => "true"})
   redirect "/#{user.email}"
 end
 

@@ -14,7 +14,8 @@ class User
   property :nickname,   String, :length => 255
   property :identifier, String, :length => 255
   property :photo_url,  String, :length => 255
-  
+  property :flickr_enabled, Boolean, :default => false
+    
   has n, :meeps
   has n, :direct_messages, :class_name => "Meep"
   has n, :relationships
@@ -63,6 +64,8 @@ class Meep
       process_dm
     when starts_with?('follow ')
       process_follow
+    when starts_with?('f ')
+      process_flickr_pic
     else
       process
     end
@@ -82,6 +85,12 @@ class Meep
     ats.each { |at| 
       self.text.sub!(at, "<a href='/#{at[2,at.length]}'>#{at}</a>")
     }
+    
+    # process flickr photo id
+    ids = self.text.scan(PHOTO_ID_REGEXP)
+    ids.each { |id|
+      self.text.sub!(id, "<img src='#{id}'/>")
+    }
   end
   
   def process_dm
@@ -95,6 +104,11 @@ class Meep
     throw :halt # don't save
   end
   
+  def process_flickr_pic
+    self.text = self.text.split[2..self.text.split.size].join(' ') # remove the first two words
+    process
+  end
+  
   def starts_with?(prefix)
     prefix = prefix.to_s
     self.text[0, prefix.length] == prefix
@@ -104,3 +118,4 @@ end
 
 URL_REGEXP = Regexp.new('\b ((https?|telnet|gopher|file|wais|ftp) : [\w/#~:.?+=&%@!\-] +?) (?=[.:?\-] * (?: [^\w/#~:.?+=&%@!\-]| $ ))', Regexp::EXTENDED)
 AT_REGEXP = Regexp.new('\s@[\w.@_-]+', Regexp::EXTENDED)
+PHOTO_ID_REGEXP = Regexp.new('[\d]+')
