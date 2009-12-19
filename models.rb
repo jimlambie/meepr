@@ -14,7 +14,7 @@ class User
   property :nickname,   String, :length => 255
   property :identifier, String, :length => 255
   property :photo_url,  String, :length => 255
-  property :flickr_enabled, Integer, :default => false
+  property :flickr_enabled, Integer, :default => 0
     
   has n, :meeps
   has n, :direct_messages, :class_name => "Meep"

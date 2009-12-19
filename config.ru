@@ -1,4 +1,4 @@
 require 'sinatra'
 require 'meep'
 
-run Sinatra.application
+run Sinatra::Application
