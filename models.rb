@@ -28,6 +28,10 @@ class User
     return u
   end
   
+  def flickr_enabled?
+    self.flickr_enabled == 1
+  end
+  
   def displayed_meeps
     meeps = []
     meeps += self.meeps.all(:recipient_id => nil, :limit => 10, :order => [:created_at.desc])
