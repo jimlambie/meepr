@@ -44,12 +44,6 @@ post '/meep' do
   redirect "/#{user.email}"
 end
 
-get '/enable_flickr/:email' do
-  user = User.get(session[:user_id])
-  user.update_attributes({:flickr_enabled => 1})
-  redirect "/#{user.email}"
-end
-
 ['/follows', '/followers'].each do |path|
   get path do
     @myself = User.get(session[:user_id])
